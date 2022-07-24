@@ -42,13 +42,6 @@ def authorList(request):
 	serializer = AuthorSerializer(tasks, many=True)
 	return Response(serializer.data)
 
-
-@api_view(['GET'])
-def bookDetail(request, pk):
-	tasks = Book.objects.get(book_id=pk)
-	serializer = BookSerializer(tasks, many=False)
-	return Response(serializer.data)
-
 @api_view(['GET'])
 def authorDetail(request, pk):
 	tasks = Author.objects.get(author_id=pk)
@@ -70,16 +63,20 @@ def authouCreate(request):
 		serializer.save()
 	return Response(serializer.data)
 
-
-@api_view(['PUT'])
-def bookUpdate(request, pk):
-	task = Book.objects.get(book_id=pk)
-	serializer = BookSerializer(instance=task, data=request.data)
-	if serializer.is_valid():
-		serializer.save()
-	return Response(serializer.data)
-
-
+@api_view(['GET','PUT'])
+def book_Detail_Update(request,pk):
+    if request.method == "PUT":
+        task = Book.objects.get(book_id=pk)
+        serializer = BookSerializer(instance=task, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+        return Response(serializer.data)
+    elif request.method == "GET":
+        tasks = Book.objects.get(book_id=pk)
+        serializer = BookSerializer(tasks, many=False)
+        return Response(serializer.data)
+    else:
+        return JsonResponse('Invalid Response', safe=False)
 
 
 @api_view(['PUT'])
