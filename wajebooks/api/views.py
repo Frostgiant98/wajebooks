@@ -31,35 +31,63 @@ def apiOverview(request):
     return Response(api_urls)
 
 @api_view(['GET'])
-def taskList(request):
-	tasks = Book.objects.all().order_by('-id')
+def bookList(request):
+	tasks = Book.objects.all().order_by('name')
 	serializer = BookSerializer(tasks, many=True)
+	return JsonResponse(serializer.data, safe=False)
+
+@api_view(['GET'])
+def authorList(request):
+	tasks = Author.objects.all().order_by('name')
+	serializer = AuthorSerializer(tasks, many=True)
+	return Response(serializer.data)
+
+
+@api_view(['GET'])
+def bookDetail(request, pk):
+	tasks = Book.objects.get(book_id=pk)
+	serializer = BookSerializer(tasks, many=False)
 	return Response(serializer.data)
 
 @api_view(['GET'])
-def taskDetail(request, pk):
-	tasks = Book.objects.get(id=pk)
-	serializer = BookSerializer(tasks, many=False)
+def authorDetail(request, pk):
+	tasks = Author.objects.get(author_id=pk)
+	serializer = AuthorSerializer(tasks, many=False)
 	return Response(serializer.data)
 
 
 @api_view(['POST'])
-def taskCreate(request):
+def bookCreate(request):
 	serializer = BookSerializer(data=request.data)
-
 	if serializer.is_valid():
 		serializer.save()
-
 	return Response(serializer.data)
 
-@api_view(['PUT'])
-def taskUpdate(request, pk):
-	task = Book.objects.get(id=pk)
-	serializer = BookSerializer(instance=task, data=request.data)
-
+@api_view(['POST'])
+def authouCreate(request):
+	serializer = AuthorSerializer(data=request.data)
 	if serializer.is_valid():
 		serializer.save()
+	return Response(serializer.data)
 
+
+@api_view(['PUT'])
+def bookUpdate(request, pk):
+	task = Book.objects.get(book_id=pk)
+	serializer = BookSerializer(instance=task, data=request.data)
+	if serializer.is_valid():
+		serializer.save()
+	return Response(serializer.data)
+
+
+
+
+@api_view(['PUT'])
+def authorUpdate(request, pk):
+	task = Author.objects.get(author_id=pk)
+	serializer = AuthorSerializer(instance=task, data=request.data)
+	if serializer.is_valid():
+		serializer.save()
 	return Response(serializer.data)
 
 

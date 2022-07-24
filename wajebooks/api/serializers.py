@@ -1,13 +1,16 @@
 from rest_framework import serializers
-from .models import Task
-
-class BookSerializer(serializers.ModelSerializer):
-    class Meta:
-        model =  Task
-        fields = '__all__'
-
+from .models import Author, Book
 
 class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
-        model =  Task
-        fields = '__all__'
+        model =  Author
+        fields = ['first_name', 'last_name']
+
+
+class BookSerializer(serializers.ModelSerializer):
+
+    author = AuthorSerializer(many = False, read_only = True)
+
+    class Meta:
+        model =  Book
+        fields = ['name', 'isbn', 'author']
