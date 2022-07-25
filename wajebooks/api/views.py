@@ -34,7 +34,9 @@ def apiOverview(request):
 def bookList(request):
 	tasks = Book.objects.all().order_by('book_id')
 	serializer = BookSerializer(tasks, many=True)
-	return JsonResponse(serializer.data, safe=False)
+	# return JsonResponse(serializer.data, safe=False)
+	return Response(serializer.data)
+
 
 @api_view(['GET'])
 def authorList(request):
